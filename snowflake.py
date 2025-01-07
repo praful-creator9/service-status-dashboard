@@ -1,7 +1,7 @@
 import requests
 
 def fetch_snowflake_status():
-    url = "https://status.snowflake.com/api/v2/status.json"
+    url = "https://status.snowflake.com/api/v2/summary.json"
     try:
         response = requests.get(url)
         if response.status_code == 200:
