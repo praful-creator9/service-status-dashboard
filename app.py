@@ -18,22 +18,6 @@ def fetch_snowflake_status():
     else:
         return "❌ Outage", "red"
 
-# Function to fetch Databricks status
-def fetch_databricks_status():
-    url = "https://status.databricks.com/"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, "html.parser")
-    
-    # Find the status element on the page
-    status = soup.find("div", {"class": "status"}).get_text().strip()
-    
-    if "operational" in status.lower():
-        return "✅ Operational", "green"
-    elif "degraded" in status.lower():
-        return "⚠️ Degraded Performance", "yellow"
-    else:
-        return "❌ Outage", "red"
-
 # Set page title and layout
 st.set_page_config(page_title="Service Status Dashboard", layout="wide")
 
@@ -42,17 +26,16 @@ st.markdown("<style> .stApp {background-color: #f4f4f9; font-family: 'Arial';} <
 
 # Title and intro
 st.title('🔧 Service Status Dashboard')
-st.markdown("**Check the operational status of Snowflake and Databricks.**")
+st.markdown("**Check the operational status of Snowflake.**")
 
-# Fetch statuses for Snowflake and Databricks
+# Fetch status for Snowflake
 snowflake_status, snowflake_indicator = fetch_snowflake_status()
-databricks_status, databricks_indicator = fetch_databricks_status()
 
 # Display status in a table
 status_data = {
-    "Service": ["Snowflake", "Databricks"],
-    "Status": [snowflake_status, databricks_status],
-    "Indicator": [snowflake_indicator, databricks_indicator],
+    "Service": ["Snowflake"],
+    "Status": [snowflake_status],
+    "Indicator": [snowflake_indicator],
 }
 
 # Create DataFrame
@@ -74,7 +57,7 @@ st.dataframe(status_df.style.applymap(lambda v: 'background-color: green' if v =
                                              'background-color: red' if v == '❌ Outage' else
                                              'background-color: yellow', subset=['Status']))
 
-# Visualize the statuses in a pie chart
+# Visualize the status in a pie chart
 import plotly.express as px
 fig = px.pie(status_df, names='Service', color='Status', title="Service Status Distribution")
 st.plotly_chart(fig)
