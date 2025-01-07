@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from service-status-dashboard.snowflake import fetch_snowflake_status
-from service-status-dashboard.databricks import fetch_databricks_status
+from service_status_dashboard.snowflake import fetch_snowflake_status
+from service_status_dashboard.databricks import fetch_databricks_status
 # from service-status-dashboard.aws import fetch_aws_status
 # from service-status-dashboard.azure import fetch_azure_status
 # from service-status-dashboard.talend import fetch_talend_status
