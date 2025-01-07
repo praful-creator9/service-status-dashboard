@@ -1,30 +1,62 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
-from snowflake import fetch_snowflake_status
-from databricks import fetch_databricks_status
+import requests
+from bs4 import BeautifulSoup
+
+# Function to fetch Snowflake status
+def fetch_snowflake_status():
+    url = "https://status.snowflake.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    
+    # Find the status element on the page
+    status = soup.find("div", {"class": "status"}).get_text().strip()
+    
+    if "operational" in status.lower():
+        return "✅ Operational", "green"
+    elif "degraded" in status.lower():
+        return "⚠️ Degraded Performance", "yellow"
+    else:
+        return "❌ Outage", "red"
+
+# Function to fetch Databricks status
+def fetch_databricks_status():
+    url = "https://status.databricks.com/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, "html.parser")
+    
+    # Find the status element on the page
+    status = soup.find("div", {"class": "status"}).get_text().strip()
+    
+    if "operational" in status.lower():
+        return "✅ Operational", "green"
+    elif "degraded" in status.lower():
+        return "⚠️ Degraded Performance", "yellow"
+    else:
+        return "❌ Outage", "red"
 
 # Set page title and layout
 st.set_page_config(page_title="Service Status Dashboard", layout="wide")
 
-# Custom CSS (optional, to add a creative theme)
+# Custom CSS for page styling
 st.markdown("<style> .stApp {background-color: #f4f4f9; font-family: 'Arial';} </style>", unsafe_allow_html=True)
 
 # Title and intro
 st.title('🔧 Service Status Dashboard')
-st.markdown("**Check the operational status of your cloud tools** like Snowflake and Databricks.")
+st.markdown("**Check the operational status of Snowflake and Databricks.**")
 
-# Fetch the statuses
+# Fetch statuses for Snowflake and Databricks
 snowflake_status, snowflake_indicator = fetch_snowflake_status()
 databricks_status, databricks_indicator = fetch_databricks_status()
 
-# Display statuses with colors and indicators
+# Display status in a table
 status_data = {
     "Service": ["Snowflake", "Databricks"],
     "Status": [snowflake_status, databricks_status],
     "Indicator": [snowflake_indicator, databricks_indicator],
 }
 
+# Create DataFrame
+import pandas as pd
 status_df = pd.DataFrame(status_data)
 
 # Create a color map for status indicators
@@ -36,17 +68,18 @@ color_map = {
 
 status_df['Status'] = status_df['Indicator'].map(color_map)
 
-# Display status table
+# Display status table with conditional formatting
 st.subheader("Service Status Overview")
 st.dataframe(status_df.style.applymap(lambda v: 'background-color: green' if v == '✅ Operational' else
                                              'background-color: red' if v == '❌ Outage' else
                                              'background-color: yellow', subset=['Status']))
 
-# Visualization of service statuses (e.g., pie chart)
+# Visualize the statuses in a pie chart
+import plotly.express as px
 fig = px.pie(status_df, names='Service', color='Status', title="Service Status Distribution")
 st.plotly_chart(fig)
 
-# Further enhancements: Display individual status with details
+# Display individual status details
 st.subheader("Service Details")
 for service, status, indicator in zip(status_df["Service"], status_df["Status"], status_df["Indicator"]):
     st.markdown(f"**{service}**: {status}")
