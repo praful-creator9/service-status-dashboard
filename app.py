@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from service_status_dashboard.snowflake import fetch_snowflake_status
-from service_status_dashboard.databricks import fetch_databricks_status
+from snowflake import fetch_snowflake_status
+from databricks import fetch_databricks_status
 
 # Set page title and layout
 st.set_page_config(page_title="Service Status Dashboard", layout="wide")
