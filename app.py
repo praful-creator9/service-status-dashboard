@@ -3,9 +3,9 @@ import pandas as pd
 import plotly.express as px
 from service-status-dashboard.snowflake import fetch_snowflake_status
 from service-status-dashboard.databricks import fetch_databricks_status
-from service-status-dashboard.aws import fetch_aws_status
-from service-status-dashboard.azure import fetch_azure_status
-from service-status-dashboard.talend import fetch_talend_status
+# from service-status-dashboard.aws import fetch_aws_status
+# from service-status-dashboard.azure import fetch_azure_status
+# from service-status-dashboard.talend import fetch_talend_status
 
 # Set page title and layout
 st.set_page_config(page_title="Service Status Dashboard", layout="wide")
@@ -20,9 +20,9 @@ st.markdown("**Check the operational status of your cloud tools** like Snowflake
 # Fetch the statuses
 snowflake_status, snowflake_indicator = fetch_snowflake_status()
 databricks_status, databricks_indicator = fetch_databricks_status()
-aws_status, aws_indicator = fetch_aws_status()
-azure_status, azure_indicator = fetch_azure_status()
-talend_status, talend_indicator = fetch_talend_status()
+# aws_status, aws_indicator = fetch_aws_status()
+# azure_status, azure_indicator = fetch_azure_status()
+# talend_status, talend_indicator = fetch_talend_status()
 
 # Display statuses with colors and indicators
 status_data = {
